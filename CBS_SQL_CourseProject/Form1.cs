@@ -117,7 +117,31 @@ namespace CBS_SQL_CourseProject
 
         private void button2_Click(object sender, EventArgs e)
         {
+            string query = "SELECT TOP 1 * FROM Source WHERE ID_Source > @currentSourceId ORDER BY ID_Source ASC;";
 
+            using (SqlCommand command = new SqlCommand(query, Program.con))
+            {
+                command.Parameters.AddWithValue("@currentSourceId", currentPictureId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        currentPictureId = reader.GetInt32(reader.GetOrdinal("ID_Source"));
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("ImageData")))
+                        {
+                            byte[] buffer = new byte[reader.GetBytes(reader.GetOrdinal("ImageData"), 0, null, 0, int.MaxValue)];
+                            reader.GetBytes(reader.GetOrdinal("ImageData"), 0, buffer, 0, buffer.Length);
+
+                            MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
+                            ms.Write(buffer, 0, buffer.Length);
+                            pictureBox1.Image = Image.FromStream(ms, true);
+                        }
+                    }
+                }
+            }
+           
         }
 
         private void button1_Click(object sender, EventArgs e)

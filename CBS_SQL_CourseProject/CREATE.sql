@@ -1,0 +1,33 @@
+﻿DROP TABLE Source;
+
+GO
+
+CREATE TABLE Source
+(
+	ID_Source INT IDENTITY NOT NULL
+		PRIMARY KEY,
+	[Name] NVARCHAR(255) NOT NULL,
+	[Address] NVARCHAR(255) NOT NULL,
+	ImageData varbinary(max) NOT NULL,
+);
+
+GO
+
+DROP TABLE Emission;
+
+GO
+
+CREATE TABLE Emission
+(
+	ID_Emission INT IDENTITY NOT NULL
+		PRIMARY KEY,
+	ID_Source INT
+		FOREIGN KEY REFERENCES Source(ID_Source),
+	[Count] INT NULL,
+	Width INT NOT NULL,
+	Height INT NOT NULL,
+	[Text] NVARCHAR(255) NULL,
+	[Date] DATE NULL
+); 
+
+GO

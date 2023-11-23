@@ -1,6 +1,6 @@
 ﻿namespace CBS_SQL_CourseProject
 {
-    partial class Form1
+    partial class PhotoView
     {
         /// <summary>
         /// Required designer variable.
@@ -40,6 +40,7 @@
             this.widthLabel = new System.Windows.Forms.Label();
             this.heightLabel = new System.Windows.Forms.Label();
             this.textLabel = new System.Windows.Forms.Label();
+            this.updateButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -136,11 +137,22 @@
             this.textLabel.TabIndex = 9;
             this.textLabel.Text = "Text";
             // 
-            // Form1
+            // updateButton
+            // 
+            this.updateButton.Location = new System.Drawing.Point(42, 168);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(75, 23);
+            this.updateButton.TabIndex = 10;
+            this.updateButton.Text = "UPDATE";
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
+            // 
+            // PhotoView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.updateButton);
             this.Controls.Add(this.textLabel);
             this.Controls.Add(this.heightLabel);
             this.Controls.Add(this.widthLabel);
@@ -151,7 +163,7 @@
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.prevButton);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "Form1";
+            this.Name = "PhotoView";
             this.Text = "CBS SQL CourseProject KaminskyiOV";
             this.Load += new System.EventHandler(this.nextButton_Click);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -171,6 +183,7 @@
         private System.Windows.Forms.Label widthLabel;
         private System.Windows.Forms.Label heightLabel;
         private System.Windows.Forms.Label textLabel;
+        private System.Windows.Forms.Button updateButton;
     }
 }
 

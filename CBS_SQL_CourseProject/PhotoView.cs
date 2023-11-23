@@ -15,9 +15,9 @@ using System.Collections;
 
 namespace CBS_SQL_CourseProject
 {
-    public partial class Form1 : Form
+    public partial class PhotoView : Form
     {
-        public Form1()
+        public PhotoView()
         {
             InitializeComponent();
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -195,6 +195,8 @@ namespace CBS_SQL_CourseProject
                 UpdateHeightLabel(pictureBox1.Image.Height);
                 UpdateTextLabel("Great Picture");
                 UpdateDateLabel(date);
+
+                _currentPictureNumber = GetTotalPictureCount();
             }
 
             UpdateCounter();
@@ -245,11 +247,18 @@ namespace CBS_SQL_CourseProject
             UpdateData();
             UpdateCounter();
         }
-        
+
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            _updateTextView = new UpdateTextView(_currentPictureId);
+            _updateTextView.ShowDialog();
+            UpdateTextLabel(_updateTextView.LastSavedString);
+        }
+
+        private UpdateTextView _updateTextView;
         private int _currentPictureId = 0;
         private int _currentPictureNumber = 0;
         private DateTime _lastChangedDate;
-
     }
 
 }

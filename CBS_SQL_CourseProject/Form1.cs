@@ -20,6 +20,7 @@ namespace CBS_SQL_CourseProject
         public Form1()
         {
             InitializeComponent();
+            UpdateCounter();
         }
 
         public int currentPictureId = 0;
@@ -76,7 +77,7 @@ namespace CBS_SQL_CourseProject
                     command.Parameters.AddWithValue("@count", 1);
                     command.Parameters.AddWithValue("@width", pictureBox1.Image.Width);
                     command.Parameters.AddWithValue("@height", pictureBox1.Image.Height);
-                    command.Parameters.AddWithValue("@text", "топ фотка");
+                    command.Parameters.AddWithValue("@text", "Great Picture");
                     command.Parameters.AddWithValue("@date", date);
 
                     command.ExecuteNonQuery();
@@ -84,6 +85,8 @@ namespace CBS_SQL_CourseProject
 
 
             }
+
+            UpdateCounter();
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
@@ -110,6 +113,8 @@ namespace CBS_SQL_CourseProject
             currentPictureId = 0;
 
             pictureBox1.Image = null;
+
+            UpdateCounter();
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -138,6 +143,7 @@ namespace CBS_SQL_CourseProject
                     }
                 }
             }
+            UpdateCounter();
         }
 
         private void prevButton_Click(object sender, EventArgs e)
@@ -166,9 +172,27 @@ namespace CBS_SQL_CourseProject
                     }
                 }
             }
+
+            UpdateCounter();
+        }
+
+        private void UpdateCounter()
+        {
+            int totalCount = GetTotalPictureCount();
+            this.counterLabel.Text = $"{currentPictureId} OF {totalCount}";
+        }
+
+        private int GetTotalPictureCount()
+        {
+            string query = "SELECT COUNT(*) FROM Source";
+            using (SqlCommand command = new SqlCommand(query, Program.con))
+            {
+                return (int)command.ExecuteScalar();
+            }
         }
 
 
+
     }
-    
+
 }

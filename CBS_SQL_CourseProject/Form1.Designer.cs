@@ -20,6 +20,8 @@
             base.Dispose(disposing);
         }
 
+        private System.Windows.Forms.Label counterLabel;
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -33,14 +35,16 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.insertButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
+            this.dateLabel = new System.Windows.Forms.Label();
+            this.counterLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(192, 29);
+            this.pictureBox1.Location = new System.Drawing.Point(177, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(411, 342);
+            this.pictureBox1.Size = new System.Drawing.Size(436, 361);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -67,7 +71,7 @@
             // 
             // insertButton
             // 
-            this.insertButton.Location = new System.Drawing.Point(56, 72);
+            this.insertButton.Location = new System.Drawing.Point(42, 134);
             this.insertButton.Name = "insertButton";
             this.insertButton.Size = new System.Drawing.Size(75, 23);
             this.insertButton.TabIndex = 3;
@@ -77,7 +81,7 @@
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(56, 120);
+            this.deleteButton.Location = new System.Drawing.Point(42, 205);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(75, 23);
             this.deleteButton.TabIndex = 4;
@@ -85,21 +89,42 @@
             this.deleteButton.UseVisualStyleBackColor = true;
             this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
+            // dateLabel
+            // 
+            this.dateLabel.AutoSize = true;
+            this.dateLabel.Location = new System.Drawing.Point(696, 100);
+            this.dateLabel.Name = "dateLabel";
+            this.dateLabel.Size = new System.Drawing.Size(28, 13);
+            this.dateLabel.TabIndex = 5;
+            this.dateLabel.Text = "date";
+            // 
+            // counterLabel
+            // 
+            this.counterLabel.AutoSize = true;
+            this.counterLabel.Location = new System.Drawing.Point(373, 406);
+            this.counterLabel.Name = "counterLabel";
+            this.counterLabel.Size = new System.Drawing.Size(30, 13);
+            this.counterLabel.TabIndex = 6;
+            this.counterLabel.Text = "0 \\ 0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.counterLabel);
+            this.Controls.Add(this.dateLabel);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.insertButton);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.prevButton);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "CBS SQL CourseProject KaminskyiOV";
             this.Load += new System.EventHandler(this.nextButton_Click);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -110,6 +135,7 @@
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.Button insertButton;
         private System.Windows.Forms.Button deleteButton;
+        private System.Windows.Forms.Label dateLabel;
     }
 }
 

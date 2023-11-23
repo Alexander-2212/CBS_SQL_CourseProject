@@ -25,6 +25,7 @@ namespace CBS_SQL_CourseProject
         }
 
         public int currentPictureId = 0;
+        public int currentPictureNumber = 0;
         private DateTime lastChangedDate;
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -50,6 +51,76 @@ namespace CBS_SQL_CourseProject
         private void UpdateTextLabel(string text)
         {
             this.textLabel.Text = $"Text: {text}";
+        }
+
+        private void UpdateData(bool isPrevious = true)
+        {
+            string nextQuery = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
+                           "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
+                           "WHERE S.ID_Source > @currentSourceId ORDER BY S.ID_Source ASC;";
+
+            string prevQuery = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
+               "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
+               "WHERE S.ID_Source < @currentSourceId ORDER BY S.ID_Source DESC;";
+
+            string query = isPrevious ? prevQuery : nextQuery;
+
+            using (SqlCommand command = new SqlCommand(query, Program.con))
+            {
+                command.Parameters.AddWithValue("@currentSourceId", currentPictureId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        currentPictureId = reader.GetInt32(reader.GetOrdinal("ID_Source"));
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("ImageData")))
+                        {
+                            byte[] buffer = new byte[reader.GetBytes(reader.GetOrdinal("ImageData"), 0, null, 0, int.MaxValue)];
+                            reader.GetBytes(reader.GetOrdinal("ImageData"), 0, buffer, 0, buffer.Length);
+
+                            MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
+                            ms.Write(buffer, 0, buffer.Length);
+                            pictureBox1.Image = Image.FromStream(ms, true);
+
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Date")))
+                        {
+                            lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
+                            UpdateDateLabel(lastChangedDate);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Width")))
+                        {
+                            int width = reader.GetInt32(reader.GetOrdinal("Width"));
+                            UpdateWidthLabel(width);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Height")))
+                        {
+                            int height = reader.GetInt32(reader.GetOrdinal("Height"));
+                            UpdateHeightLabel(height);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Text")))
+                        {
+                            string text = reader.GetString(reader.GetOrdinal("Text"));
+                            UpdateTextLabel(text);
+                        }
+
+                        if (isPrevious)
+                        {
+                            currentPictureNumber--;
+                        }
+                        else
+                        {
+                            currentPictureNumber++;
+                        }
+                    }
+                }
+            }
         }
 
         private void insertButton_Click(object sender, EventArgs e)
@@ -90,7 +161,9 @@ namespace CBS_SQL_CourseProject
                     {
                         returnId = Convert.ToInt32(result);
                         currentPictureId = returnId;
+                        currentPictureNumber++;
                     }
+
 
                 }
 
@@ -107,6 +180,11 @@ namespace CBS_SQL_CourseProject
 
                     command.ExecuteNonQuery();
                 }
+
+                UpdateWidthLabel(pictureBox1.Image.Width);
+                UpdateHeightLabel(pictureBox1.Image.Height);
+                UpdateTextLabel("Great Picture");
+                UpdateDateLabel(date);
 
 
             }
@@ -135,126 +213,49 @@ namespace CBS_SQL_CourseProject
                 command.ExecuteNonQuery();
             }
 
-            currentPictureId = 0;
+            //currentPictureId = 0;
 
-            pictureBox1.Image = null;
+            //pictureBox1.Image = null;
+
+            if (GetTotalPictureCount() > 0 && currentPictureNumber != 1)
+            {
+                UpdateData();
+            }
+            else if (GetTotalPictureCount() > 0 && currentPictureNumber == 1)
+            {
+                UpdateData(false);
+                currentPictureNumber--;
+            }
+            else
+            {
+                ClearControls();
+            }
+
 
             UpdateCounter();
         }
 
+        private void ClearControls()
+        {
+            currentPictureId = 0;
+            currentPictureNumber = 0;
+            pictureBox1.Image = null;
+            this.dateLabel.Text = "Date";
+            this.textLabel.Text = "Text:";
+            this.widthLabel.Text = "Width:";
+            this.heightLabel.Text = "Height:";
+        }
+
         private void nextButton_Click(object sender, EventArgs e)
         {
-            string query = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
-                           "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
-                           "WHERE S.ID_Source > @currentSourceId ORDER BY S.ID_Source ASC;";
+            UpdateData(false);
 
-
-            using (SqlCommand command = new SqlCommand(query, Program.con))
-            {
-                command.Parameters.AddWithValue("@currentSourceId", currentPictureId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        currentPictureId = reader.GetInt32(reader.GetOrdinal("ID_Source"));
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("ImageData")))
-                        {
-                            byte[] buffer = new byte[reader.GetBytes(reader.GetOrdinal("ImageData"), 0, null, 0, int.MaxValue)];
-                            reader.GetBytes(reader.GetOrdinal("ImageData"), 0, buffer, 0, buffer.Length);
-
-                            MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
-                            ms.Write(buffer, 0, buffer.Length);
-                            pictureBox1.Image = Image.FromStream(ms, true);
-
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Date")))
-                        {
-                            lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
-                            UpdateDateLabel(lastChangedDate);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Width")))
-                        {
-                            int width = reader.GetInt32(reader.GetOrdinal("Width"));
-                            UpdateWidthLabel(width);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Height")))
-                        {
-                            int height = reader.GetInt32(reader.GetOrdinal("Height"));
-                            UpdateHeightLabel(height);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Text")))
-                        {
-                            string text = reader.GetString(reader.GetOrdinal("Text"));
-                            UpdateTextLabel(text);
-                        }
-
-                    }
-                }
-            }
             UpdateCounter();
         }
 
         private void prevButton_Click(object sender, EventArgs e)
         {
-            string query = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
-                           "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
-                           "WHERE S.ID_Source < @currentSourceId ORDER BY S.ID_Source DESC;";
-
-
-            using (SqlCommand command = new SqlCommand(query, Program.con))
-            {
-                command.Parameters.AddWithValue("@currentSourceId", currentPictureId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        currentPictureId = reader.GetInt32(reader.GetOrdinal("ID_Source"));
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("ImageData")))
-                        {
-                            byte[] buffer = new byte[reader.GetBytes(reader.GetOrdinal("ImageData"), 0, null, 0, int.MaxValue)];
-                            reader.GetBytes(reader.GetOrdinal("ImageData"), 0, buffer, 0, buffer.Length);
-
-                            MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
-                            ms.Write(buffer, 0, buffer.Length);
-                            pictureBox1.Image = Image.FromStream(ms, true);
-
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Date")))
-                        {
-                            lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
-                            UpdateDateLabel(lastChangedDate);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Width")))
-                        {
-                            int width = reader.GetInt32(reader.GetOrdinal("Width"));
-                            UpdateWidthLabel(width);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Height")))
-                        {
-                            int height = reader.GetInt32(reader.GetOrdinal("Height"));
-                            UpdateHeightLabel(height);
-                        }
-
-                        if (!reader.IsDBNull(reader.GetOrdinal("Text")))
-                        {
-                            string text = reader.GetString(reader.GetOrdinal("Text"));
-                            UpdateTextLabel(text);
-                        }
-
-                    }
-                }
-            }
+            UpdateData();
 
             UpdateCounter();
         }
@@ -262,7 +263,7 @@ namespace CBS_SQL_CourseProject
         private void UpdateCounter()
         {
             int totalCount = GetTotalPictureCount();
-            this.counterLabel.Text = $"{currentPictureId} OF {totalCount}";
+            this.counterLabel.Text = $"{currentPictureNumber} OF {totalCount}";
         }
 
         private int GetTotalPictureCount()

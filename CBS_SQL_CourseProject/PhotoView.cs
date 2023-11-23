@@ -21,7 +21,6 @@ namespace CBS_SQL_CourseProject
         {
             InitializeComponent();
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            UpdateCounter();
         }
 
         private void UpdateCounter()
@@ -85,8 +84,8 @@ namespace CBS_SQL_CourseProject
 
                         if (!reader.IsDBNull(reader.GetOrdinal("Date")))
                         {
-                            _lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
-                            UpdateDateLabel(_lastChangedDate);
+                            var date = reader.GetDateTime(reader.GetOrdinal("Date"));
+                            UpdateDateLabel(date);
                         }
 
                         if (!reader.IsDBNull(reader.GetOrdinal("Width")))
@@ -156,47 +155,43 @@ namespace CBS_SQL_CourseProject
                 ms.Write(blob, 0, blob.Length);
                 pictureBox1.Image = Image.FromStream(ms, true);
 
-                _lastChangedDate = File.GetLastWriteTime(path);
-                UpdateDateLabel(_lastChangedDate);
+                UpdateDateLabel(date);
 
                 string query = "INSERT INTO Source (Name, Address, ImageData) VALUES (@name, @address, @imageData); SELECT SCOPE_IDENTITY();";
-                int returnId = 0;
 
                 using (SqlCommand command = new SqlCommand(query, Program.s_connection))
                 {
-                    command.Parameters.AddWithValue("@name", path);
+                    command.Parameters.AddWithValue("@name", Path.GetFileName(path));
                     command.Parameters.AddWithValue("@address", path);
                     command.Parameters.AddWithValue("@imageData", blob);
 
                     object result = command.ExecuteScalar();
                     if (result != null)
                     {
-                        returnId = Convert.ToInt32(result);
-                        _currentPictureId = returnId;
-                        _currentPictureNumber++;
+                        _currentPictureId = Convert.ToInt32(result);
+
+                        query = "INSERT INTO Emission (ID_Source, Count, Width, Height, Text, Date) VALUES (@id, @count, @width, @height, @text, @date)";
+
+                        using (SqlCommand secCommand = new SqlCommand(query, Program.s_connection))
+                        {
+                            secCommand.Parameters.AddWithValue("@id", _currentPictureId);
+                            secCommand.Parameters.AddWithValue("@count", 1);
+                            secCommand.Parameters.AddWithValue("@width", pictureBox1.Image.Width);
+                            secCommand.Parameters.AddWithValue("@height", pictureBox1.Image.Height);
+                            secCommand.Parameters.AddWithValue("@text", "Great Picture");
+                            secCommand.Parameters.AddWithValue("@date", date);
+
+                            secCommand.ExecuteNonQuery();
+                        }
+
+                        UpdateWidthLabel(pictureBox1.Image.Width);
+                        UpdateHeightLabel(pictureBox1.Image.Height);
+                        UpdateTextLabel("Great Picture");
+                        UpdateDateLabel(date);
+
+                        _currentPictureNumber = GetTotalPictureCount();
                     }
                 }
-
-                query = "INSERT INTO Emission (ID_Source, Count, Width, Height, Text, Date) VALUES (@id, @count, @width, @height, @text, @date)";
-
-                using (SqlCommand command = new SqlCommand(query, Program.s_connection))
-                {
-                    command.Parameters.AddWithValue("@id", returnId);
-                    command.Parameters.AddWithValue("@count", 1);
-                    command.Parameters.AddWithValue("@width", pictureBox1.Image.Width);
-                    command.Parameters.AddWithValue("@height", pictureBox1.Image.Height);
-                    command.Parameters.AddWithValue("@text", "Great Picture");
-                    command.Parameters.AddWithValue("@date", date);
-
-                    command.ExecuteNonQuery();
-                }
-
-                UpdateWidthLabel(pictureBox1.Image.Width);
-                UpdateHeightLabel(pictureBox1.Image.Height);
-                UpdateTextLabel("Great Picture");
-                UpdateDateLabel(date);
-
-                _currentPictureNumber = GetTotalPictureCount();
             }
 
             UpdateCounter();
@@ -251,6 +246,7 @@ namespace CBS_SQL_CourseProject
         private void updateButton_Click(object sender, EventArgs e)
         {
             _updateTextView = new UpdateTextView(_currentPictureId);
+            _updateTextView.Initialize();
             _updateTextView.ShowDialog();
             UpdateTextLabel(_updateTextView.LastSavedString);
         }
@@ -258,7 +254,6 @@ namespace CBS_SQL_CourseProject
         private UpdateTextView _updateTextView;
         private int _currentPictureId = 0;
         private int _currentPictureNumber = 0;
-        private DateTime _lastChangedDate;
     }
 
 }

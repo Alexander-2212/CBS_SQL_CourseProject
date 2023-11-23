@@ -13,16 +13,14 @@ namespace CBS_SQL_CourseProject
 {
     public partial class UpdateTextView : Form
     {
-        public UpdateTextView()
-        {
-            InitializeComponent();
-        }
-
         public UpdateTextView(int curPictureId)
         {
             InitializeComponent();
-
             _pictureId = curPictureId;
+        }
+
+        public void Initialize()
+        {
             string text = GetPictureTextData();
 
             if (text == null)

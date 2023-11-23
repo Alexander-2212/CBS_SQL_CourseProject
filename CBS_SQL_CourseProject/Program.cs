@@ -11,18 +11,16 @@ namespace CBS_SQL_CourseProject
 {
     public static class Program
     {
-        public static SqlConnection con;
+        public static SqlConnection s_connection;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            var connection = ConfigurationManager.ConnectionStrings["MyData"].ConnectionString;
-
-            con = new SqlConnection(connection);
-
-            con.Open();
+            var con = ConfigurationManager.ConnectionStrings["MyData"].ConnectionString;
+            s_connection = new SqlConnection(con);
+            s_connection.Open();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

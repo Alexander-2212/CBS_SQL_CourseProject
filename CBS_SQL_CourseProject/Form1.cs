@@ -20,14 +20,36 @@ namespace CBS_SQL_CourseProject
         public Form1()
         {
             InitializeComponent();
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             UpdateCounter();
         }
 
         public int currentPictureId = 0;
+        private DateTime lastChangedDate;
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void UpdateDateLabel(DateTime date)
+        {
+            this.dateLabel.Text = date.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        private void UpdateWidthLabel(int width)
+        {
+            this.widthLabel.Text = $"Width: {width}";
+        }
+
+        private void UpdateHeightLabel(int height)
+        {
+            this.heightLabel.Text = $"Height: {height}";
+        }
+
+        private void UpdateTextLabel(string text)
+        {
+            this.textLabel.Text = $"Text: {text}";
         }
 
         private void insertButton_Click(object sender, EventArgs e)
@@ -48,6 +70,9 @@ namespace CBS_SQL_CourseProject
                 MemoryStream ms = new MemoryStream(blob, 0, blob.Length);
                 ms.Write(blob, 0, blob.Length);
                 pictureBox1.Image = Image.FromStream(ms, true);
+
+                lastChangedDate = File.GetLastWriteTime(path);
+                UpdateDateLabel(lastChangedDate);
 
                 string query = "INSERT INTO Source (Name, Address, ImageData) VALUES (@name, @address, @imageData); SELECT SCOPE_IDENTITY();";
 
@@ -119,7 +144,10 @@ namespace CBS_SQL_CourseProject
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            string query = "SELECT TOP 1 * FROM Source WHERE ID_Source > @currentSourceId ORDER BY ID_Source ASC;";
+            string query = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
+                           "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
+                           "WHERE S.ID_Source > @currentSourceId ORDER BY S.ID_Source ASC;";
+
 
             using (SqlCommand command = new SqlCommand(query, Program.con))
             {
@@ -139,7 +167,33 @@ namespace CBS_SQL_CourseProject
                             MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
                             ms.Write(buffer, 0, buffer.Length);
                             pictureBox1.Image = Image.FromStream(ms, true);
+
                         }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Date")))
+                        {
+                            lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
+                            UpdateDateLabel(lastChangedDate);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Width")))
+                        {
+                            int width = reader.GetInt32(reader.GetOrdinal("Width"));
+                            UpdateWidthLabel(width);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Height")))
+                        {
+                            int height = reader.GetInt32(reader.GetOrdinal("Height"));
+                            UpdateHeightLabel(height);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Text")))
+                        {
+                            string text = reader.GetString(reader.GetOrdinal("Text"));
+                            UpdateTextLabel(text);
+                        }
+
                     }
                 }
             }
@@ -148,7 +202,10 @@ namespace CBS_SQL_CourseProject
 
         private void prevButton_Click(object sender, EventArgs e)
         {
-            string query = "SELECT TOP 1 * FROM Source WHERE ID_Source < @currentSourceId ORDER BY ID_Source DESC;";
+            string query = "SELECT TOP 1 S.ID_Source, S.ImageData, E.[Date], E.Width, E.Height, E.Text " +
+                           "FROM Source S INNER JOIN Emission E ON S.ID_Source = E.ID_Source " +
+                           "WHERE S.ID_Source < @currentSourceId ORDER BY S.ID_Source DESC;";
+
 
             using (SqlCommand command = new SqlCommand(query, Program.con))
             {
@@ -168,7 +225,33 @@ namespace CBS_SQL_CourseProject
                             MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length);
                             ms.Write(buffer, 0, buffer.Length);
                             pictureBox1.Image = Image.FromStream(ms, true);
+
                         }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Date")))
+                        {
+                            lastChangedDate = reader.GetDateTime(reader.GetOrdinal("Date"));
+                            UpdateDateLabel(lastChangedDate);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Width")))
+                        {
+                            int width = reader.GetInt32(reader.GetOrdinal("Width"));
+                            UpdateWidthLabel(width);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Height")))
+                        {
+                            int height = reader.GetInt32(reader.GetOrdinal("Height"));
+                            UpdateHeightLabel(height);
+                        }
+
+                        if (!reader.IsDBNull(reader.GetOrdinal("Text")))
+                        {
+                            string text = reader.GetString(reader.GetOrdinal("Text"));
+                            UpdateTextLabel(text);
+                        }
+
                     }
                 }
             }

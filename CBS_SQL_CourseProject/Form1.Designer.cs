@@ -37,6 +37,9 @@
             this.deleteButton = new System.Windows.Forms.Button();
             this.dateLabel = new System.Windows.Forms.Label();
             this.counterLabel = new System.Windows.Forms.Label();
+            this.widthLabel = new System.Windows.Forms.Label();
+            this.heightLabel = new System.Windows.Forms.Label();
+            this.textLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -92,11 +95,11 @@
             // dateLabel
             // 
             this.dateLabel.AutoSize = true;
-            this.dateLabel.Location = new System.Drawing.Point(696, 100);
+            this.dateLabel.Location = new System.Drawing.Point(641, 134);
             this.dateLabel.Name = "dateLabel";
-            this.dateLabel.Size = new System.Drawing.Size(28, 13);
+            this.dateLabel.Size = new System.Drawing.Size(30, 13);
             this.dateLabel.TabIndex = 5;
-            this.dateLabel.Text = "date";
+            this.dateLabel.Text = "Date";
             // 
             // counterLabel
             // 
@@ -107,11 +110,41 @@
             this.counterLabel.TabIndex = 6;
             this.counterLabel.Text = "0 \\ 0";
             // 
+            // widthLabel
+            // 
+            this.widthLabel.AutoSize = true;
+            this.widthLabel.Location = new System.Drawing.Point(641, 168);
+            this.widthLabel.Name = "widthLabel";
+            this.widthLabel.Size = new System.Drawing.Size(35, 13);
+            this.widthLabel.TabIndex = 7;
+            this.widthLabel.Text = "Width";
+            // 
+            // heightLabel
+            // 
+            this.heightLabel.AutoSize = true;
+            this.heightLabel.Location = new System.Drawing.Point(639, 210);
+            this.heightLabel.Name = "heightLabel";
+            this.heightLabel.Size = new System.Drawing.Size(38, 13);
+            this.heightLabel.TabIndex = 8;
+            this.heightLabel.Text = "Height";
+            // 
+            // textLabel
+            // 
+            this.textLabel.AutoSize = true;
+            this.textLabel.Location = new System.Drawing.Point(641, 248);
+            this.textLabel.Name = "textLabel";
+            this.textLabel.Size = new System.Drawing.Size(28, 13);
+            this.textLabel.TabIndex = 9;
+            this.textLabel.Text = "Text";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textLabel);
+            this.Controls.Add(this.heightLabel);
+            this.Controls.Add(this.widthLabel);
             this.Controls.Add(this.counterLabel);
             this.Controls.Add(this.dateLabel);
             this.Controls.Add(this.deleteButton);
@@ -136,6 +169,9 @@
         private System.Windows.Forms.Button insertButton;
         private System.Windows.Forms.Button deleteButton;
         private System.Windows.Forms.Label dateLabel;
+        private System.Windows.Forms.Label widthLabel;
+        private System.Windows.Forms.Label heightLabel;
+        private System.Windows.Forms.Label textLabel;
     }
 }
 

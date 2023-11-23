@@ -24,7 +24,7 @@ CREATE TABLE Emission
 	Width INT NOT NULL,
 	Height INT NOT NULL,
 	[Text] NVARCHAR(255) NULL,
-	[Date] DATE NULL
+	[Date] DATETIME NULL
 ); 
 GO
 

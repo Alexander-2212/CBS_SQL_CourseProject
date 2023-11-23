@@ -29,7 +29,7 @@ namespace CBS_SQL_CourseProject
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void insertButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -84,12 +84,10 @@ namespace CBS_SQL_CourseProject
 
 
             }
-
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void deleteButton_Click(object sender, EventArgs e)
         {
-
             string query = "DELETE FROM Emission WHERE ID_Source = @id";
 
             using (SqlCommand command = new SqlCommand(query, Program.con))
@@ -112,10 +110,9 @@ namespace CBS_SQL_CourseProject
             currentPictureId = 0;
 
             pictureBox1.Image = null;
-
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void nextButton_Click(object sender, EventArgs e)
         {
             string query = "SELECT TOP 1 * FROM Source WHERE ID_Source > @currentSourceId ORDER BY ID_Source ASC;";
 
@@ -141,10 +138,9 @@ namespace CBS_SQL_CourseProject
                     }
                 }
             }
-           
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void prevButton_Click(object sender, EventArgs e)
         {
             string query = "SELECT TOP 1 * FROM Source WHERE ID_Source < @currentSourceId ORDER BY ID_Source DESC;";
 
@@ -171,6 +167,8 @@ namespace CBS_SQL_CourseProject
                 }
             }
         }
+
+
     }
     
 }

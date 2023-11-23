@@ -1,20 +1,4 @@
-﻿DROP TABLE Source;
-
-GO
-
-CREATE TABLE Source
-(
-	ID_Source INT IDENTITY NOT NULL
-		PRIMARY KEY,
-	[Name] NVARCHAR(255) NOT NULL,
-	[Address] NVARCHAR(255) NOT NULL,
-	ImageData varbinary(max) NOT NULL,
-);
-
-GO
-
-DROP TABLE Emission;
-
+﻿DROP TABLE Emission;
 GO
 
 CREATE TABLE Emission
@@ -29,5 +13,17 @@ CREATE TABLE Emission
 	[Text] NVARCHAR(255) NULL,
 	[Date] DATE NULL
 ); 
+GO
 
+DROP TABLE Source;
+GO
+
+CREATE TABLE Source
+(
+	ID_Source INT IDENTITY NOT NULL
+		PRIMARY KEY,
+	[Name] NVARCHAR(255) NOT NULL,
+	[Address] NVARCHAR(255) NOT NULL,
+	ImageData varbinary(max) NOT NULL,
+);
 GO
